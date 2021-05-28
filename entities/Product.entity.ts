@@ -37,6 +37,7 @@ export class Product {
     @ManyToOne(() => User, user => user.products)
     @JoinColumn({name: 'id', referencedColumnName: 'userId'})
     user: User;
+    
 
 
 

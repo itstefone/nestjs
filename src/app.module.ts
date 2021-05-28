@@ -4,9 +4,11 @@ import { AppController } from './controllers/app.controller';
 import {DatabaseConfiguration} from '../config/database.configuration';
 import { User } from 'entities/User.entity';
 import { UserService } from './services/user/user.service';
-import { Product } from 'entities/Product.category';
+import { Product } from 'entities/Product.entity';
 import { Category } from 'entities/Category.entity';
 import { UsersController } from './controllers/api/UsersController';
+import { Role } from 'entities/Role.entity';
+import { AuthController } from './controllers/AuthController';
 
 @Module({
   imports: [
@@ -17,11 +19,11 @@ import { UsersController } from './controllers/api/UsersController';
       password: DatabaseConfiguration.password,
       database: DatabaseConfiguration.database,
       port: 3306,
-      entities: [User, Product, Category]
+      entities: [User, Product, Category, Role]
     }),
     TypeOrmModule.forFeature([User, Product, Category])
   ],
-  controllers: [AppController, UsersController],
+  controllers: [AppController, UsersController, AuthController],
   providers: [UserService],
 })
 export class AppModule {}

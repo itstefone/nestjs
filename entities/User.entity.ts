@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Product } from "./Product.category";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "./Product.entity";
+import { Role } from "./Role.entity";
 
 @Entity()
 export class User {
@@ -16,7 +17,19 @@ export class User {
     @OneToMany(() => Product, product => product.user)
     products: Product[];
      
+    @ManyToMany(type => Role, role => role.users)
+    @JoinTable({
+        name: "user_role",
+        joinColumn: {
+            name: 'user_id',
+            referencedColumnName: 'userId'
+        },
+        inverseJoinColumn: {
+            name: 'id',
+            referencedColumnName:'roleId'
+        }
+    })
+    roles: Role[]
 
 
-  
 }
