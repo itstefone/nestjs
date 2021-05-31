@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/User.entity';
 import { AddUserDto } from 'src/dtos/users/add.users.dto';
@@ -65,18 +65,14 @@ export class UserService {
         })
 
         if(!user) {
-            return new CustomResponse('Invalid Username', 403);
+            throw new HttpException("Invalid username or password", HttpStatus.UNAUTHORIZED);
         }
         const isValidPassword = await this.validPassword( data.password, user.passwordHash);
 
         if(!isValidPassword) {
-            return new CustomResponse('Invalid Password', 403);
+            throw new HttpException("Invalid username or password", HttpStatus.UNAUTHORIZED);
         }
-
-
         let jwtData = new JwtTokenDTO;
-
-
         jwtData.username = user.username;
         jwtData.userId = user.userId;
         jwtData.expire_at = Math.floor(Date.now() / 1000) + 86400 * 14;
@@ -85,16 +81,9 @@ export class UserService {
         
 
         let jwtToken = jwt.sign(jwtData.toPlainObject(), secretJWTKEY);
-
-
       
-
-
         return new CustomResponse('Successfully login', 200, jwtToken);
-
-        
-
-
+    
     } 
 
 
